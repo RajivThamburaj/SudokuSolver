@@ -1,7 +1,7 @@
 """
 Models a Sudoku board - this file can be run for a command-line interface
 
-By Rajiv Thamburaj
+Author: Rajiv Thamburaj
 """
 
 class Board(object):
