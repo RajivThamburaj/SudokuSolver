@@ -94,6 +94,7 @@ class SolverGUI(Frame):
 		
 		# Create the status bar message field
 		statusBar = Message(self, text="Click a cell and type a number! You'll need at least 17.", width=360, background="#444444", foreground="#CCCCCC")
+		self.statusBar = statusBar
 		statusBar.place(x=20, y=400, width=360, height=30)
 		# Create the solve button
 		solveButton = Button(self, text="Solve", command=self.solveButtonPressed, highlightbackground="#222222")
@@ -155,9 +156,12 @@ class SolverGUI(Frame):
 		for key,value in self.cellIndices.items():
 			self.canvas.itemconfig(key, text=boardModel.numbers[value])
 		
-		#Disable the solve button
+		# Disable the solve button
 		self.solveButton.config(state=DISABLED)
 		self.solved = True
+		
+		# Update the status bar
+		self.statusBar.config(text="Puzzle solved!")
 	
 	def resetButtonPressed(self):
 		"""
@@ -176,6 +180,9 @@ class SolverGUI(Frame):
 		self.solveButton.config(state=NORMAL)
 		self.boardString = "0"*81
 		self.solved = False
+		
+		# Update the status bar
+		self.statusBar.config(text="Click a cell and type a number! You'll need at least 17.")
 
 if __name__ == "__main__":
 	"""
