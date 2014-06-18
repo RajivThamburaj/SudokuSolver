@@ -145,6 +145,9 @@ class SolverGUI(Frame):
 		"""	
 		# Create the model and solve the puzzle
 		boardModel = board.Board(self.boardString, 9)
+		if not(boardModel.isSolvable()):
+			self.statusBar.config(text="Sorry, no unique solution. You'll need 17 numbers.")
+			return
 		boardModel.solve()
 		
 		# Deselect the selected cell

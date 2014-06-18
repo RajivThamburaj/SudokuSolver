@@ -15,7 +15,20 @@ class Board(object):
 		"""
 		self.numbers = boardNumbers
 		self.size = boardSize
+	
+	def isSolvable(self):
+		"""
+		Returns a boolean that corresponds to the solvability of the puzzle
+		"""
+		# A Sudoku puzzle requires at least 17 entries to have a unique solution
+		MINIMUM_ENTRIES = 17
+		MAXIMUM_EMPTY_CELLS = self.size*self.size - MINIMUM_ENTRIES
+		numEmptyCells = self.numbers.count('0')
 		
+		if numEmptyCells > MAXIMUM_EMPTY_CELLS:
+			return False
+		return True
+	
 	def solve(self):
 		"""
 		Solve the puzzle!
@@ -150,6 +163,10 @@ if __name__ == "__main__":
 	print "\nHere is the board:\n"
 	print str(board)
 	# Solve the puzzle and print the solution
-	board.solve()
-	print "\nAnd here is the solution:\n"
-	print str(board)
+	
+	if board.isSolvable():
+		board.solve()
+		print "\nAnd here is the solution:\n"
+		print str(board)
+	else:
+		print "\nSorry, no unique solution exists."
