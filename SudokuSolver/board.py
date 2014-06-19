@@ -27,6 +27,53 @@ class Board(object):
 		
 		if numEmptyCells > MAXIMUM_EMPTY_CELLS:
 			return False
+		elif not(self.isValid()):
+			return False
+		return True
+	
+	def isValid(self):
+		"""
+		Make sure that the puzzle is valid (no repeated numbers in a row, column, or square)
+		"""
+		N = self.size
+		n = N/3
+		
+		# Loop through all rows/columns/squares
+		for i in xrange(N):
+			rowNumbers = []
+			columnNumbers = []
+			squareNumbers = []
+			
+			# Loop through the numbers in each row/column/square
+			for j in xrange(N):
+				rowIndex = N*i + j
+				columnIndex = i + N*j
+				squareIndex = (i/n)*N*n + (i%n)*N/n + (j/n)*N + (j%n)
+				
+				rowNumbers.append(self.numbers[rowIndex])
+				columnNumbers.append(self.numbers[columnIndex])
+				squareNumbers.append(self.numbers[squareIndex])
+			
+			if self.containsDuplicates(rowNumbers) or self.containsDuplicates(columnNumbers) or self.containsDuplicates(squareNumbers):
+				return False
+		
+		return True
+
+	def containsDuplicates(self, list):
+		"""
+		Checks a list for duplicates
+		"""
+		# Remove all '0's from the list
+		listCopy = []
+		for element in list:
+			if element != '0':
+				listCopy.append(element)
+		
+		# Turning the list to a set removes duplicates
+		listAsSet = set(listCopy)
+		
+		if len(listCopy) == len(listAsSet):
+			return False
 		return True
 	
 	def solve(self):
@@ -154,7 +201,6 @@ if __name__ == "__main__":
 	Main method - if this module is run, this method can be used for a
 	command-line interface
 	"""
-	
 	# Initialize the board from a string
 	boardNumbers = raw_input("Enter numbers, as a single string (no spaces): ")
 	board = Board(boardNumbers)
@@ -163,7 +209,6 @@ if __name__ == "__main__":
 	print "\nHere is the board:\n"
 	print str(board)
 	# Solve the puzzle and print the solution
-	
 	if board.isSolvable():
 		board.solve()
 		print "\nAnd here is the solution:\n"

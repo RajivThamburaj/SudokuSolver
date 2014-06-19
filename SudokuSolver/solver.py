@@ -146,7 +146,7 @@ class SolverGUI(Frame):
 		# Create the model and solve the puzzle
 		boardModel = board.Board(self.boardString, 9)
 		if not(boardModel.isSolvable()):
-			self.statusBar.config(text="Sorry, no unique solution. You'll need 17 numbers.")
+			self.statusBar.config(text="No solution. Do you have 17 consistent numbers?")
 			return
 		boardModel.solve()
 		
