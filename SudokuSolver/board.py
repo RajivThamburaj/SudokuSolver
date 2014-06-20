@@ -76,7 +76,7 @@ class Board(object):
 			return False
 		return True
 	
-	def solve(self):
+	def trySolve(self):
 		"""
 		Solve the puzzle!
 		"""
@@ -84,6 +84,14 @@ class Board(object):
 		self.logic_solve()
 		# When we can't get any further, start backtracking
 		self.backtrack_solve(Board(self.numbers, self.size))
+	
+	def wasSolved(self):
+		"""
+		If the initial entries are nontrivially inconsistent, then it is not possible to tell
+		that there is no solution until a solve is attempted. Thus, this method should be called
+		after trySolve() to verify that a correct solution was produced.
+		"""
+		return not('0' in self.numbers)
 	
 	def logic_solve(self):
 		"""
@@ -210,8 +218,11 @@ if __name__ == "__main__":
 	print str(board)
 	# Solve the puzzle and print the solution
 	if board.isSolvable():
-		board.solve()
-		print "\nAnd here is the solution:\n"
-		print str(board)
+		board.trySolve()
+		if board.wasSolved():
+			print "\nAnd here is the solution:\n"
+			print str(board)
+		else:
+			print "\nSorry, no unique solution exists."
 	else:
 		print "\nSorry, no unique solution exists."

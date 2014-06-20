@@ -143,12 +143,18 @@ class SolverGUI(Frame):
 		"""
 		Callback for mouse events on the solve button
 		"""	
-		# Create the model and solve the puzzle
+		# Create the model
 		boardModel = board.Board(self.boardString, 9)
+		# Make sure the puzzle can be solved
 		if not(boardModel.isSolvable()):
 			self.statusBar.config(text="No solution. Do you have 17 consistent numbers?")
 			return
-		boardModel.solve()
+		# Attempt a solution
+		boardModel.trySolve()
+		# Check for any inconsistencies
+		if not(boardModel.wasSolved()):
+			self.statusBar.config(text="Oops, looks like your numbers are inconsistent.")
+			return
 		
 		# Deselect the selected cell
 		self.canvas.itemconfig(self.selectedCellSpecifier, fill="#333333")
