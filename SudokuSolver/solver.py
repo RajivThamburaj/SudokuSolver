@@ -27,9 +27,9 @@ class SolverGUI(Frame):
 		self.selectedTextSpecifier = None
 		self.solved = False
 		
-		self.createGUI()
+		self.create_gui()
 	
-	def createGUI(self):
+	def create_gui(self):
 		"""
 		Create and place the GUI elements
 		"""
@@ -40,7 +40,7 @@ class SolverGUI(Frame):
 		boardCanvas = Canvas(self, bg="#333333", highlightthickness=0)
 		self.canvas = boardCanvas
 		boardCanvas.place(x=20, y=20, width=360, height=360)
-		boardCanvas.bind("<Key>", self.keyPressed)
+		boardCanvas.bind("<Key>", self.key_pressed)
 		boardCanvas.focus_set()
 		
 		# Update the window and find the canvas width
@@ -53,7 +53,7 @@ class SolverGUI(Frame):
 			for j in xrange(9):
 				# Create the cell rectangle and add a callback for mouse click events
 				cellSpecifier = boardCanvas.create_rectangle(cellSize*j, cellSize*i, cellSize*(j+1), cellSize*(i+1), fill="#333333", width=0)
-				boardCanvas.tag_bind(cellSpecifier, "<Button>", self.cellPressed)
+				boardCanvas.tag_bind(cellSpecifier, "<Button>", self.cell_pressed)
 				
 				# Set the font and create the text field
 				font = tkFont.Font(family='Arial', size=20)
@@ -97,14 +97,14 @@ class SolverGUI(Frame):
 		self.statusBar = statusBar
 		statusBar.place(x=20, y=400, width=360, height=30)
 		# Create the solve button
-		solveButton = Button(self, text="Solve", command=self.solveButtonPressed, highlightbackground="#222222")
+		solveButton = Button(self, text="Solve", command=self.solve_button_pressed, highlightbackground="#222222")
 		self.solveButton = solveButton
 		solveButton.place(x=20, y=450, width=170, height=20)
 		# Create the reset button
-		resetButton = Button(self, text="Reset", command=self.resetButtonPressed, highlightbackground="#222222")
+		resetButton = Button(self, text="Reset", command=self.reset_button_pressed, highlightbackground="#222222")
 		resetButton.place(x=210, y=450, width=170, height=20)
 	
-	def cellPressed(self, event):
+	def cell_pressed(self, event):
 		"""
 		Callback for mouse click events on one of the grid cells
 		"""
@@ -120,7 +120,7 @@ class SolverGUI(Frame):
 		self.selectedTextSpecifier = self.textSpecifiers[self.selectedCellSpecifier]
 		self.canvas.itemconfig(self.selectedCellSpecifier, fill="#3355CC")
 	
-	def keyPressed(self, event):
+	def key_pressed(self, event):
 		"""
 		Callback for keyboard events
 		"""
@@ -139,20 +139,20 @@ class SolverGUI(Frame):
 				# Update the model to reflect the changes
 				self.boardString = self.boardString[:index] + "0" + self.boardString[index+1:]
 	
-	def solveButtonPressed(self):
+	def solve_button_pressed(self):
 		"""
 		Callback for mouse events on the solve button
 		"""	
 		# Create the model
 		boardModel = board.Board(self.boardString, 9)
 		# Make sure the puzzle can be solved
-		if not(boardModel.isSolvable()):
-			self.statusBar.config(text="No solution. Do you have 17 consistent numbers?")
+		if not(boardModel.is_solvable()):
+			self.statusBar.config(text="No solution. Do you have 17+ consistent numbers?")
 			return
 		# Attempt a solution
-		boardModel.trySolve()
+		boardModel.try_solve()
 		# Check for any inconsistencies
-		if not(boardModel.wasSolved()):
+		if not(boardModel.was_solved()):
 			self.statusBar.config(text="Oops, looks like your numbers are inconsistent.")
 			return
 		
@@ -172,7 +172,7 @@ class SolverGUI(Frame):
 		# Update the status bar
 		self.statusBar.config(text="Puzzle solved!")
 	
-	def resetButtonPressed(self):
+	def reset_button_pressed(self):
 		"""
 		Callback for mouse events on the reset button
 		"""

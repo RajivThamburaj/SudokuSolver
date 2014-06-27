@@ -16,7 +16,7 @@ class Board(object):
 		self.numbers = boardNumbers
 		self.size = boardSize
 	
-	def isSolvable(self):
+	def is_solvable(self):
 		"""
 		Returns a boolean that corresponds to the solvability of the puzzle
 		"""
@@ -27,11 +27,11 @@ class Board(object):
 		
 		if numEmptyCells > MAXIMUM_EMPTY_CELLS:
 			return False
-		elif not(self.isValid()):
+		elif not(self.is_valid()):
 			return False
 		return True
 	
-	def isValid(self):
+	def is_valid(self):
 		"""
 		Make sure that the puzzle is valid (no repeated numbers in a row, column, or square)
 		"""
@@ -54,12 +54,12 @@ class Board(object):
 				columnNumbers.append(self.numbers[columnIndex])
 				squareNumbers.append(self.numbers[squareIndex])
 			
-			if self.containsDuplicates(rowNumbers) or self.containsDuplicates(columnNumbers) or self.containsDuplicates(squareNumbers):
+			if self.contains_duplicates(rowNumbers) or self.contains_duplicates(columnNumbers) or self.contains_duplicates(squareNumbers):
 				return False
 		
 		return True
 
-	def containsDuplicates(self, list):
+	def contains_duplicates(self, list):
 		"""
 		Checks a list for duplicates
 		"""
@@ -76,7 +76,7 @@ class Board(object):
 			return False
 		return True
 	
-	def trySolve(self):
+	def try_solve(self):
 		"""
 		Solve the puzzle!
 		"""
@@ -85,11 +85,11 @@ class Board(object):
 		# When we can't get any further, start backtracking
 		self.backtrack_solve(Board(self.numbers, self.size))
 	
-	def wasSolved(self):
+	def was_solved(self):
 		"""
 		If the initial entries are nontrivially inconsistent, then it is not possible to tell
 		that there is no solution until a solve is attempted. Thus, this method should be called
-		after trySolve() to verify that a correct solution was produced.
+		after try_solve() to verify that a correct solution was produced.
 		"""
 		return not('0' in self.numbers)
 	
@@ -113,7 +113,7 @@ class Board(object):
 				if self.numbers[i] != "0":
 					continue
 				
-				validNumbersList = list(self.getValidNumbers(i))
+				validNumbersList = list(self.get_valid_numbers(i))
 				
 				# If there is only one valid number, insert it
 				if len(validNumbersList) == 1:
@@ -133,7 +133,7 @@ class Board(object):
 			self.numbers = boardCopy.numbers
 			return
 		
-		validNumbers = boardCopy.getValidNumbers(firstUnknown)	
+		validNumbers = boardCopy.get_valid_numbers(firstUnknown)	
 		for number in validNumbers:
 			# Insert the number at the correct index
 			boardCopy.numbers = boardCopy.numbers[:firstUnknown] + number + boardCopy.numbers[firstUnknown+1:]
@@ -142,7 +142,7 @@ class Board(object):
 			self.backtrack_solve(Board(boardCopy.numbers, self.size))
 		
 		
-	def getValidNumbers(self, currentIndex):
+	def get_valid_numbers(self, currentIndex):
 		"""
 		Gets the set of all valid numbers that can be placed at the given postion
 		"""
@@ -217,9 +217,9 @@ if __name__ == "__main__":
 	print "\nHere is the board:\n"
 	print str(board)
 	# Solve the puzzle and print the solution
-	if board.isSolvable():
-		board.trySolve()
-		if board.wasSolved():
+	if board.is_solvable():
+		board.try_solve()
+		if board.was_solved():
 			print "\nAnd here is the solution:\n"
 			print str(board)
 		else:
