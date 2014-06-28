@@ -9,12 +9,12 @@ class Board(object):
 	Models a Sudoku board
 	"""
 	
-	def __init__(self, boardNumbers, boardSize=9):
+	def __init__(self, board_numbers, board_size=9):
 		"""
 		Initialize the board
 		"""
-		self.numbers = boardNumbers
-		self.size = boardSize
+		self.numbers = board_numbers
+		self.size = board_size
 	
 	def is_solvable(self):
 		"""
@@ -23,9 +23,9 @@ class Board(object):
 		# A Sudoku puzzle requires at least 17 entries to have a unique solution
 		MINIMUM_ENTRIES = 17
 		MAXIMUM_EMPTY_CELLS = self.size*self.size - MINIMUM_ENTRIES
-		numEmptyCells = self.numbers.count('0')
+		num_empty_cells = self.numbers.count('0')
 		
-		if numEmptyCells > MAXIMUM_EMPTY_CELLS:
+		if num_empty_cells > MAXIMUM_EMPTY_CELLS:
 			return False
 		elif not(self.is_valid()):
 			return False
@@ -40,21 +40,21 @@ class Board(object):
 		
 		# Loop through all rows/columns/squares
 		for i in xrange(N):
-			rowNumbers = []
-			columnNumbers = []
-			squareNumbers = []
+			row_numbers = []
+			column_numbers = []
+			square_numbers = []
 			
 			# Loop through the numbers in each row/column/square
 			for j in xrange(N):
-				rowIndex = N*i + j
-				columnIndex = i + N*j
-				squareIndex = (i/n)*N*n + (i%n)*N/n + (j/n)*N + (j%n)
+				row_index = N*i + j
+				column_index = i + N*j
+				square_index = (i/n)*N*n + (i%n)*N/n + (j/n)*N + (j%n)
 				
-				rowNumbers.append(self.numbers[rowIndex])
-				columnNumbers.append(self.numbers[columnIndex])
-				squareNumbers.append(self.numbers[squareIndex])
+				row_numbers.append(self.numbers[row_index])
+				column_numbers.append(self.numbers[column_index])
+				square_numbers.append(self.numbers[square_index])
 			
-			if self.contains_duplicates(rowNumbers) or self.contains_duplicates(columnNumbers) or self.contains_duplicates(squareNumbers):
+			if self.contains_duplicates(row_numbers) or self.contains_duplicates(column_numbers) or self.contains_duplicates(square_numbers):
 				return False
 		
 		return True
@@ -64,15 +64,15 @@ class Board(object):
 		Checks a list for duplicates
 		"""
 		# Remove all '0's from the list
-		listCopy = []
+		list_copy = []
 		for element in list:
 			if element != '0':
-				listCopy.append(element)
+				list_copy.append(element)
 		
 		# Turning the list to a set removes duplicates
-		listAsSet = set(listCopy)
+		list_as_set = set(list_copy)
 		
-		if len(listCopy) == len(listAsSet):
+		if len(list_copy) == len(list_as_set):
 			return False
 		return True
 	
@@ -101,11 +101,11 @@ class Board(object):
 		"""
 		N = self.size
 		# A search is "successful" if a position is modified in one pass of the board
-		successfulSearch = True	
+		successful_search = True	
 		
 		# Continue looping until a search is not successful
-		while successfulSearch:
-			successfulSearch = False
+		while successful_search:
+			successful_search = False
 			
 			# Loop through the entire board
 			for i in range(N*N):
@@ -113,60 +113,60 @@ class Board(object):
 				if self.numbers[i] != "0":
 					continue
 				
-				validNumbersList = list(self.get_valid_numbers(i))
+				valid_numbers_list = list(self.get_valid_numbers(i))
 				
 				# If there is only one valid number, insert it
-				if len(validNumbersList) == 1:
-					successfulSearch = True
-					self.numbers = self.numbers[:i] + validNumbersList[0] + self.numbers[i+1:]
+				if len(valid_numbers_list) == 1:
+					successful_search = True
+					self.numbers = self.numbers[:i] + valid_numbers_list[0] + self.numbers[i+1:]
 	
-	def backtrack_solve(self, boardCopy):
+	def backtrack_solve(self, board_copy):
 		"""
 		Solve the puzzle by backtracking - guessing a number from a list of available numbers and then
 		continuing until a contradiction is reached (i.e. there is a position which has no valid numbers)
 		or the puzzle is complete
 		"""
 		# Find the first unknown position on the board
-		firstUnknown = boardCopy.numbers.find("0")
+		first_unknown = board_copy.numbers.find("0")
 		# If there's no unknown position, the puzzle is solved!
-		if firstUnknown == -1:
-			self.numbers = boardCopy.numbers
+		if first_unknown == -1:
+			self.numbers = board_copy.numbers
 			return
 		
-		validNumbers = boardCopy.get_valid_numbers(firstUnknown)	
-		for number in validNumbers:
+		valid_numbers = board_copy.get_valid_numbers(first_unknown)	
+		for number in valid_numbers:
 			# Insert the number at the correct index
-			boardCopy.numbers = boardCopy.numbers[:firstUnknown] + number + boardCopy.numbers[firstUnknown+1:]
+			board_copy.numbers = board_copy.numbers[:first_unknown] + number + board_copy.numbers[first_unknown+1:]
 			# Call recursively with a copy of the board (the previous operation
 			# essentially copied the string of numbers)
-			self.backtrack_solve(Board(boardCopy.numbers, self.size))
+			self.backtrack_solve(Board(board_copy.numbers, self.size))
 		
 		
-	def get_valid_numbers(self, currentIndex):
+	def get_valid_numbers(self, current_index):
 		"""
 		Gets the set of all valid numbers that can be placed at the given postion
 		"""
 		N = self.size
 		n = N/3
-		rowNumber = currentIndex / N
-		columnNumber = currentIndex % N
+		row_number = current_index / N
+		column_number = current_index % N
 		# This is the location of the upper left position in the current square
-		squareIndex = (rowNumber / n)*N*n + (columnNumber / n)*N/n
-		invalidNumbers = set()
+		square_index = (row_number / n)*N*n + (column_number / n)*N/n
+		invalid_numbers = set()
 		
 		# Find all numbers that are not valid (the same number cannot be repeated
 		# in the row, column, or square)
 		for i in xrange(N):
 			# Find all invalid numbers in the same row
-			invalidNumbers.add(self.numbers[N*rowNumber + i])
+			invalid_numbers.add(self.numbers[N*row_number + i])
 			# Find all invalid numbers in the same column
-			invalidNumbers.add(self.numbers[columnNumber + N*i])
+			invalid_numbers.add(self.numbers[column_number + N*i])
 			# Find all invalid numbers in the same square
-			invalidNumbers.add(self.numbers[squareIndex + i%n + i/n*N])
+			invalid_numbers.add(self.numbers[square_index + i%n + i/n*N])
 		
-		allNumbers = set(str(i) for i in xrange(N+1))
-		validNumbers = allNumbers.difference(invalidNumbers)
-		return validNumbers
+		all_numbers = set(str(i) for i in xrange(N+1))
+		valid_numbers = all_numbers.difference(invalid_numbers)
+		return valid_numbers
 	
 	def __repr__(self):
 		"""
@@ -180,29 +180,29 @@ class Board(object):
 		"""
 		N = self.size
 		n = N/3
-		outputString = ""
+		output_string = ""
 		
 		for i in range(N*N):
 			# Add the current number to the string
-			outputString += self.numbers[i]
+			output_string += self.numbers[i]
 			
 			# Don't add any markers after the final number
 			if i != N*N-1:
 				# Add a line break at the end of the row
 				if (i+1) % N == 0:
-					outputString += "\n"
+					output_string += "\n"
 				# Add a separator at every third column
 				elif (i+1) % n == 0:
-					outputString += " | "
+					output_string += " | "
 				# Add a space at every other number
 				else:
-					outputString += " "
+					output_string += " "
 			
 				# Add a horizontal rule at every third row
 				if (i+1) % (N*3) == 0:
-					outputString += "---------------------\n"
+					output_string += "---------------------\n"
 		
-		return outputString
+		return output_string
 
 if __name__ == "__main__":
 	"""
@@ -210,8 +210,8 @@ if __name__ == "__main__":
 	command-line interface
 	"""
 	# Initialize the board from a string
-	boardNumbers = raw_input("Enter numbers, as a single string (no spaces): ")
-	board = Board(boardNumbers)
+	board_numbers = raw_input("Enter numbers, as a single string (no spaces): ")
+	board = Board(board_numbers)
 	
 	# Print the board
 	print "\nHere is the board:\n"
