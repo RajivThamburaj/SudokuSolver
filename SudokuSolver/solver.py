@@ -9,6 +9,9 @@ import tkFont
 import board
 
 class SolverGUI(Frame):
+	"""
+	GUI for the Sudoku Solver
+	"""
 	
 	def __init__(self, parent):
 		"""
